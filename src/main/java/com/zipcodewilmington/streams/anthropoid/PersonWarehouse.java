@@ -49,15 +49,11 @@ public final class PersonWarehouse implements Iterable<Person> {
     /**
      * @return list of uniquely named Person objects
      */ //TODO
-    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
-
-        Set<Object> seen = ConcurrentHashMap.newKeySet();
-        return t -> seen.add(keyExtractor.apply(t));
-    }
 
 
     public Stream<Person> getUniquelyNamedPeople() {
-        return people.stream().filter(distinctByKey(Person::getName));
+        Set<String> strings = new HashSet<>();
+        return people.stream().filter(a -> strings.add(a.getName()));
 
     }
 
@@ -67,7 +63,8 @@ public final class PersonWarehouse implements Iterable<Person> {
      * @return a Stream of respective
      */ //TODO
     public Stream<Person> getUniquelyNamedPeopleStartingWith(Character character) {
-        return null;
+        return getUniquelyNamedPeople().filter(names -> names.getName().startsWith(character.toString()));
+
     }
 
     /**
@@ -75,7 +72,7 @@ public final class PersonWarehouse implements Iterable<Person> {
      * @return a Stream of respective
      */ //TODO
     public Stream<Person> getFirstNUniquelyNamedPeople(int n) {
-        return null;
+        return getUniquelyNamedPeople().limit(n);
     }
 
     /**
